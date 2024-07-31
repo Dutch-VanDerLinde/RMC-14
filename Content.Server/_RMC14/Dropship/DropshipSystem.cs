@@ -61,6 +61,7 @@ public sealed class DropshipSystem : SharedDropshipSystem
         SubscribeLocalEvent<DropshipComponent, FTLStartedEvent>(OnRefreshUI);
         SubscribeLocalEvent<DropshipComponent, FTLCompletedEvent>(OnFTLCompleted);
         SubscribeLocalEvent<DropshipComponent, FTLUpdatedEvent>(OnRefreshUI);
+        SubscribeLocalEvent<DropshipComponent, FTLUpdatedEvent>(OnRefreshCrashWarning);
 
         Subs.BuiEvents<DropshipNavigationComputerComponent>(DropshipNavigationUiKey.Key,
             subs =>
@@ -140,6 +141,11 @@ public sealed class DropshipSystem : SharedDropshipSystem
         dropship.Locked = !dropship.Locked;
         dropship.LastLocked = time;
         SetAllDocks(grid, dropship.Locked);
+    }
+
+    private void OnRefreshCrashWarning(Entity<DropshipComponent> ent, ref FTLUpdatedEvent args)
+    {
+
     }
 
     public override bool FlyTo(Entity<DropshipNavigationComputerComponent> computer, EntityUid destination, EntityUid? user, bool hijack = false, float? startupTime = null, float? hyperspaceTime = null)
