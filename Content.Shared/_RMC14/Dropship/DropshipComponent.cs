@@ -26,6 +26,15 @@ public sealed partial class DropshipComponent : Component
     public SoundSpecifier MarineHijackSound = new SoundPathSpecifier("/Audio/_RMC14/Announcements/ARES/hijack.ogg", AudioParams.Default.WithVolume(-6));
 
     [DataField, AutoNetworkedField]
+    public SoundSpecifier MarineCrashWarningSound = new SoundPathSpecifier("/Audio/_RMC14/Announcements/ARES/dropship_emergency.ogg", AudioParams.Default.WithVolume(-6));
+
+    [DataField, AutoNetworkedField]
+    public SoundSpecifier HijackIncomingSound = new SoundPathSpecifier("/Audio/_RMC14/Effects/Hijack/dropship_incoming.ogg");
+
+    [DataField, AutoNetworkedField]
+    public SoundSpecifier HijackCrashingSound = new SoundPathSpecifier("/Audio/_RMC14/Effects/Hijack/dropship_crash.ogg");
+
+    [DataField, AutoNetworkedField]
     public bool Locked;
 
     [DataField, AutoNetworkedField]
