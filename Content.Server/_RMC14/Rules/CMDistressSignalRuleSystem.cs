@@ -775,7 +775,7 @@ public sealed class CMDistressSignalRuleSystem : GameRuleSystem<CMDistressSignal
             if (xenosAlive && !marinesAlive)
             {
                 distress.Result = DistressSignalRuleResult.MajorXenoVictory;
-                EndRound(distress);
+                // EndRound(distress);
                 continue;
             }
 
@@ -785,13 +785,13 @@ public sealed class CMDistressSignalRuleSystem : GameRuleSystem<CMDistressSignal
                 if (distress.Hijack)
                 {
                     distress.Result = DistressSignalRuleResult.MinorXenoVictory;
-                    EndRound(distress);
+                    // EndRound(distress);
                     continue;
                 }
                 else
                 {
                     distress.Result = DistressSignalRuleResult.MajorMarineVictory;
-                    EndRound(distress);
+                    // EndRound(distress);
                     continue;
                 }
             }

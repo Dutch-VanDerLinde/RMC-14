@@ -19,6 +19,7 @@ using Content.Shared.Interaction;
 using Content.Shared.Shuttles.Components;
 using Content.Shared.Shuttles.Systems;
 using Robust.Server.Audio;
+using Robust.Server.Player;
 using Robust.Server.GameObjects;
 using Robust.Shared.Configuration;
 using Robust.Shared.Physics.Components;
@@ -40,6 +41,7 @@ public sealed class DropshipSystem : SharedDropshipSystem
     [Dependency] private readonly TransformSystem _transform = default!;
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
     [Dependency] private readonly SharedXenoAnnounceSystem _xenoAnnounce = default!;
+    [Dependency] private readonly IPlayerManager _playerManager = default!;
 
     private EntityQuery<DockingComponent> _dockingQuery;
     private EntityQuery<DoorComponent> _doorQuery;
@@ -164,14 +166,14 @@ public sealed class DropshipSystem : SharedDropshipSystem
             if (!dropship.Crashed)
                 continue;
 
-            if (ftl.StateTime.Length.Seconds == dropship.HijackCrashWarningAt.Seconds)
+            if (ftl.StateTime.Length.Seconds >= dropship.HijackCrashWarningAt.Seconds)
                 _marineAnnounce.AnnounceARES(uid, $"EMERGENCY:\n\nDROPSHIP ON COLLISION COURSE. CRASH IMMINENT.", dropship.HijackCrashingSound);
 
-            if (ftl.StateTime.Length.Seconds == dropship.HijackIncomingAt.Seconds)
-                _audio.PlayGlobal(dropship.HijackIncomingSound, Filter.Empty(), true);
+            if (ftl.StateTime.Length.Seconds >= dropship.HijackIncomingAt.Seconds)
+                _audio.PlayGlobal(dropship.HijackIncomingSound, Filter.Empty().AddAllPlayers(_playerManager), true);
 
-            if (ftl.StateTime.Length.Seconds == dropship.HijackCrashAt.Seconds)
-                _audio.PlayGlobal(dropship.HijackCrashingSound, Filter.Empty(), true);
+            if (ftl.StateTime.Length.Seconds >= dropship.HijackCrashAt.Seconds)
+                _audio.PlayGlobal(dropship.HijackCrashingSound, Filter.Empty().AddAllPlayers(_playerManager), true);
         }
     }
 
