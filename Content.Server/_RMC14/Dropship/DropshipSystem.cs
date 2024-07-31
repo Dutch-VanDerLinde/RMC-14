@@ -169,6 +169,9 @@ public sealed class DropshipSystem : SharedDropshipSystem
 
             if (ftl.StateTime.Length.Seconds == dropship.HijackIncomingAt.Seconds)
                 _audio.PlayGlobal(dropship.HijackIncomingSound, Filter.Empty(), true);
+
+            if (ftl.StateTime.Length.Seconds == dropship.HijackCrashAt.Seconds)
+                _audio.PlayGlobal(dropship.HijackCrashingSound, Filter.Empty(), true);
         }
     }
 

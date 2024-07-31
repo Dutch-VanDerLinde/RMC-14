@@ -39,7 +39,10 @@ public sealed partial class DropshipComponent : Component
     public TimeSpan HijackCrashWarningAt = TimeSpan.FromSeconds(50);
 
     [DataField, AutoNetworkedField]
-    public TimeSpan HijackIncomingAt = TimeSpan.FromSeconds(15);
+    public TimeSpan HijackIncomingAt = TimeSpan.FromSeconds(20);
+
+    [DataField, AutoNetworkedField]
+    public TimeSpan HijackCrashAt = TimeSpan.FromSeconds(7);
 
     [DataField, AutoNetworkedField]
     public bool Locked;
