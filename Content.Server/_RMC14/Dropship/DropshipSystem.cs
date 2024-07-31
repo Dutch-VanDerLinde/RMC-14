@@ -61,7 +61,8 @@ public sealed class DropshipSystem : SharedDropshipSystem
         SubscribeLocalEvent<DropshipComponent, FTLStartedEvent>(OnRefreshUI);
         SubscribeLocalEvent<DropshipComponent, FTLCompletedEvent>(OnFTLCompleted);
         SubscribeLocalEvent<DropshipComponent, FTLUpdatedEvent>(OnRefreshUI);
-        SubscribeLocalEvent<DropshipComponent, FTLUpdatedEvent>(OnRefreshCrashWarning);
+
+        SubscribeLocalEvent<FTLUpdatedEvent>(OnRefreshCrashWarning);
 
         Subs.BuiEvents<DropshipNavigationComputerComponent>(DropshipNavigationUiKey.Key,
             subs =>
@@ -143,9 +144,32 @@ public sealed class DropshipSystem : SharedDropshipSystem
         SetAllDocks(grid, dropship.Locked);
     }
 
-    private void OnRefreshCrashWarning(Entity<DropshipComponent> ent, ref FTLUpdatedEvent args)
+    private void OnRefreshCrashWarning(ref FTLUpdatedEvent args)
     {
+        var computers = EntityQueryEnumerator<DropshipNavigationComputerComponent>();
+        while (computers.MoveNext(out var uid, out var comp))
+        {
+            if (Transform(uid).GridUid is not { } grid)
+                continue;
 
+            if (!TryComp(grid, out FTLComponent? ftl) ||
+                !ftl.Running ||
+                ftl.State == FTLState.Available)
+            {
+                continue;
+            }
+
+            if (!TryComp(grid, out DropshipComponent? dropship))
+                continue;
+            if (!dropship.Crashed)
+                continue;
+
+            if (ftl.StateTime.Length.Seconds == dropship.HijackCrashWarningAt.Seconds)
+                _marineAnnounce.AnnounceARES(uid, $"EMERGENCY:\n\nDROPSHIP ON COLLISION COURSE. CRASH IMMINENT.", dropship.HijackCrashingSound);
+
+            if (ftl.StateTime.Length.Seconds == dropship.HijackIncomingAt.Seconds)
+                _audio.PlayGlobal(dropship.HijackIncomingSound, Filter.Empty(), true);
+        }
     }
 
     public override bool FlyTo(Entity<DropshipNavigationComputerComponent> computer, EntityUid destination, EntityUid? user, bool hijack = false, float? startupTime = null, float? hyperspaceTime = null)

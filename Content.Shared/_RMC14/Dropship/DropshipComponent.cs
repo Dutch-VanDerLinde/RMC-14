@@ -1,4 +1,5 @@
 using Content.Shared.Radio;
+using Content.Shared.Timing;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
@@ -26,13 +27,19 @@ public sealed partial class DropshipComponent : Component
     public SoundSpecifier MarineHijackSound = new SoundPathSpecifier("/Audio/_RMC14/Announcements/ARES/hijack.ogg", AudioParams.Default.WithVolume(-6));
 
     [DataField, AutoNetworkedField]
-    public SoundSpecifier MarineCrashWarningSound = new SoundPathSpecifier("/Audio/_RMC14/Announcements/ARES/dropship_emergency.ogg", AudioParams.Default.WithVolume(-6));
+    public SoundSpecifier HijackrashWarningSound = new SoundPathSpecifier("/Audio/_RMC14/Announcements/ARES/dropship_emergency.ogg", AudioParams.Default.WithVolume(-6));
 
     [DataField, AutoNetworkedField]
     public SoundSpecifier HijackIncomingSound = new SoundPathSpecifier("/Audio/_RMC14/Effects/Hijack/dropship_incoming.ogg");
 
     [DataField, AutoNetworkedField]
     public SoundSpecifier HijackCrashingSound = new SoundPathSpecifier("/Audio/_RMC14/Effects/Hijack/dropship_crash.ogg");
+
+    [DataField, AutoNetworkedField]
+    public TimeSpan HijackCrashWarningAt = TimeSpan.FromSeconds(50);
+
+    [DataField, AutoNetworkedField]
+    public TimeSpan HijackIncomingAt = TimeSpan.FromSeconds(15);
 
     [DataField, AutoNetworkedField]
     public bool Locked;
