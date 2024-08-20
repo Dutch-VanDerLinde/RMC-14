@@ -1176,6 +1176,7 @@ public sealed class CMDistressSignalRuleSystem : GameRuleSystem<CMDistressSignal
             "solaris" => "Solaris Ridge",
             "prison" => "Fiorina Science Annex",
             "shiva" => "Shivas Snowball",
+            "origin" => "NT14 Origin EV-167",
             _ => SelectedPlanetMapName,
         };
         return SelectedPlanetMap;
