@@ -359,29 +359,6 @@ public sealed class CMDistressSignalRuleSystem : GameRuleSystem<CMDistressSignal
                 return playerId;
             }
 
-            var survivorSpawners = new Dictionary<ProtoId<JobPrototype>, List<EntityUid>>();
-            var spawnerQuery = EntityQueryEnumerator<SpawnPointComponent>();
-            while (spawnerQuery.MoveNext(out var spawnId, out var spawnComp))
-            {
-                if (spawnComp.Job is not { } job)
-                    continue;
-
-                if (comp.SurvivorJobs.Any(t => t.Job == spawnComp.Job))
-                    survivorSpawners.GetOrNew(job).Add(spawnId);
-            }
-
-            // TODO RMC14 remove defaulting to civ survivor spawners
-            foreach (var (job, spawners) in survivorSpawners)
-            {
-                if (job == comp.CivilianSurvivorJob)
-                    continue;
-
-                if (survivorSpawners.TryGetValue(comp.CivilianSurvivorJob, out var civSpawners))
-                {
-                    spawners.AddRange(civSpawners);
-                }
-            }
-
             if (SelectedPlanetMap != null)
             {
                 if (SelectedPlanetMap.Value.Comp.SurvivorJobs != null)
@@ -389,6 +366,20 @@ public sealed class CMDistressSignalRuleSystem : GameRuleSystem<CMDistressSignal
 
                 comp.SurvivorJobInserts = _serialization.CreateCopy(SelectedPlanetMap.Value.Comp.SurvivorJobInserts);
                 comp.SurvivorJobOverrides = _serialization.CreateCopy(SelectedPlanetMap.Value.Comp.SurvivorJobOverrides);
+            }
+
+            var survivorSpawners = new Dictionary<ProtoId<JobPrototype>, List<EntityUid>>();
+            var spawnerQuery = EntityQueryEnumerator<SpawnPointComponent>();
+            while (spawnerQuery.MoveNext(out var spawnId, out var spawnComp))
+            {
+                if (spawnComp.Job is not { } spawnerJob)
+                    continue;
+
+                if (comp.SurvivorJobs.Any(t => t.Job == spawnerJob))
+                    survivorSpawners.GetOrNew(spawnerJob).Add(spawnId);
+
+                if (comp.SurvivorJobInserts != null && comp.SurvivorJobInserts.Any(t => t.Value.Any(i => i.Insert == spawnerJob)))
+                    survivorSpawners.GetOrNew(spawnerJob).Add(spawnId);
             }
 
             var survivorSpawnersLeft = new Dictionary<ProtoId<JobPrototype>, List<EntityUid>>();
@@ -400,8 +391,7 @@ public sealed class CMDistressSignalRuleSystem : GameRuleSystem<CMDistressSignal
             NetUserId? SpawnSurvivor(ProtoId<JobPrototype> job, List<NetUserId> list, out bool stop)
             {
                 stop = false;
-                if (!survivorSpawnersLeft.TryGetValue(job, out var jobSpawnersLeft) &&
-                    !survivorSpawnersLeft.TryGetValue(comp.CivilianSurvivorJob, out jobSpawnersLeft))
+                if (!survivorSpawnersLeft.TryGetValue(comp.CivilianSurvivorJob, out var jobSpawnersLeft))
                 {
                     stop = true;
                     return null;
@@ -489,6 +479,19 @@ public sealed class CMDistressSignalRuleSystem : GameRuleSystem<CMDistressSignal
                 }
 
                 list.Remove(playerId); // remove the player from the pool because they passed the checks
+
+                // spawn the survivor at an insert spawnpoint rather than a normal spawnpoint if one is available
+                if (survivorSpawnersLeft.TryGetValue(spawnAsJob, out var insertSpawnersLeft))
+                {
+                    if (insertSpawnersLeft.Count == 0)
+                    {
+                        if (survivorSpawners.TryGetValue(spawnAsJob, out var jobSpawners))
+                            insertSpawnersLeft.AddRange(jobSpawners);
+                    }
+
+                    if (insertSpawnersLeft.Count > 0)
+                        jobSpawnersLeft = insertSpawnersLeft;
+                }
 
                 var spawner = _random.PickAndTake(jobSpawnersLeft);
                 ev.PlayerPool.Remove(player);
