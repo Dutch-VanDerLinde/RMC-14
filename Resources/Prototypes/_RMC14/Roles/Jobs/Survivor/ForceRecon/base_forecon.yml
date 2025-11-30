@@ -1,7 +1,7 @@
 - type: job
   parent: CMSurvivor
   id: RMCSurvivorForeconBase
-  name: rmc-job-name-forecon
+  name: rmc-playtime-tracker-job-name-survivor-military
   description: rmc-job-description-forecon
   ranks:
     RMCRankSergeant: []
