@@ -60,6 +60,11 @@
         Blunt: 0
     throwRange: 2
   - type: RMCMesonsNonviewable
+  - type: MeleeSound
+    soundGroups:
+      Brute:
+        path:
+          "/Audio/_RMC14/Structures/metalhit.ogg"
 
 - type: entity
   parent: RMCTankReagentEmpty
@@ -87,7 +92,6 @@
   - type: Anchorable
     flags: None
 
-
 - type: entity
   parent: RMCTankReagentEmpty
   id: RMCTankReagentFuel
@@ -98,6 +102,7 @@
   - type: Sprite
     layers:
     - state: weldtank
+    - state: t_inactive
   - type: SolutionContainerManager
     solutions:
       tank:
@@ -182,8 +187,11 @@
 - type: entity
   parent: RMCTankReagentEmpty
   id: RMCTankReagentSulphuricAcid
-  suffix: SulphuricAcid
+  suffix: Sulphuric Acid
   components:
+  - type: Sprite
+    layers:
+    - state: sacidtank
   - type: SolutionContainerManager
     solutions:
       tank:
