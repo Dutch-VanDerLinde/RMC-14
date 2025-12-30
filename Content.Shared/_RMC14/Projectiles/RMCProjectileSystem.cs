@@ -178,12 +178,11 @@ public sealed class RMCProjectileSystem : EntitySystem
 
         args.Cancelled = true;
 
-        var popupText = Loc.GetString("rmc-bullet-miss");
-        var popupTextOthers = Loc.GetString("rmc-bullet-miss-others");
-        _popup.PopupPredicted(popupText, popupTextOthers, args.OtherEntity, args.OtherEntity);
-
-        _audio.PlayLocal(projectile.Comp.MissSound, args.OtherEntity, args.OtherEntity);
-        _jitter.DoJitter(args.OtherEntity, projectile.Comp.MissJitterDuration, false, 5, 2);
+        if (args.Cancelled && projectileComponent.Shooter != args.OtherEntity)
+        {
+            _audio.PlayLocal(projectile.Comp.MissSound, args.OtherEntity, args.OtherEntity);
+            _jitter.DoJitter(args.OtherEntity, projectile.Comp.MissJitterDuration, true, 5, 3);
+        }
     }
 
     private bool IsProjectileTargetFriendly(EntityUid projectile, EntityUid target)
