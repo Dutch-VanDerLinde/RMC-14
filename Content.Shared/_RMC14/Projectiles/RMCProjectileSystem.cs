@@ -180,7 +180,7 @@ public sealed class RMCProjectileSystem : EntitySystem
 
         if (args.Cancelled && projectileComponent.Shooter != args.OtherEntity)
         {
-            _audio.PlayLocal(projectile.Comp.MissSound, args.OtherEntity, args.OtherEntity);
+            _audio.PlayEntity(projectile.Comp.MissSound, args.OtherEntity, args.OtherEntity);
             _jitter.DoJitter(args.OtherEntity, projectile.Comp.MissJitterDuration, true, 5, 3);
         }
     }
