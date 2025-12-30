@@ -1,6 +1,7 @@
 using Content.Shared._RMC14.Random;
 using Content.Shared._RMC14.Weapons.Ranged;
 using Content.Shared.FixedPoint;
+using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Map;
 using Robust.Shared.Serialization;
@@ -45,6 +46,19 @@ public sealed partial class RMCProjectileAccuracyComponent : Component
     /// </summary>
     [DataField, AutoNetworkedField]
     public bool ForceHit = false;
+
+    /// <summary>
+    /// The sound that plays on the client when a bullet misses.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public SoundSpecifier MissSound = new SoundCollectionSpecifier("BulletMiss",
+        AudioParams.Default.WithVariation(0.1f));
+
+    /// <summary>
+    /// Time in seconds the jitter effect plays for a bullet missing an entity.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public TimeSpan MissJitterDuration = TimeSpan.FromSeconds(0.5);
 
     /// <summary>
     /// These are the coordinates from which the projectile was shot. Used to determine the distance travelled.

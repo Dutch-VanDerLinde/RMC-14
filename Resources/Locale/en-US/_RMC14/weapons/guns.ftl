@@ -75,3 +75,4 @@ expendable-light-starshell-ash-empty-name = extinguished star shell ash
 expendable-light-starshell-ash-empty-desc = Burnt out remains of a star shell
 
 rmc-bullet-miss = The bullet narrowly misses you!
+rmc-bullet-miss-others = The bullet narrowly misses you!

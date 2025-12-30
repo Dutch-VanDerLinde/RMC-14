@@ -4,11 +4,13 @@ using Content.Shared._RMC14.Random;
 using Content.Shared._RMC14.Xenonids.Hive;
 using Content.Shared.Examine;
 using Content.Shared.FixedPoint;
+using Content.Shared.Jittering;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.NPC.Systems;
 using Content.Shared.Popups;
 using Content.Shared.Projectiles;
 using Content.Shared.Whitelist;
+using Robust.Shared.Audio.Systems;
 using Robust.Shared.Network;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Physics.Systems;
@@ -27,7 +29,9 @@ public sealed class RMCProjectileSystem : EntitySystem
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly EntityWhitelistSystem _whitelist = default!;
+    [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedXenoHiveSystem _hive = default!;
+    [Dependency] private readonly SharedJitteringSystem _jitter = default!;
 
     public override void Initialize()
     {
@@ -173,6 +177,13 @@ public sealed class RMCProjectileSystem : EntitySystem
             return;
 
         args.Cancelled = true;
+
+        var popupText = Loc.GetString("rmc-bullet-miss");
+        var popupTextOthers = Loc.GetString("rmc-bullet-miss-others");
+        _popup.PopupPredicted(popupText, popupTextOthers, args.OtherEntity, args.OtherEntity);
+
+        _audio.PlayLocal(projectile.Comp.MissSound, args.OtherEntity, args.OtherEntity);
+        _jitter.DoJitter(args.OtherEntity, projectile.Comp.MissJitterDuration, false, 5, 2);
     }
 
     private bool IsProjectileTargetFriendly(EntityUid projectile, EntityUid target)
