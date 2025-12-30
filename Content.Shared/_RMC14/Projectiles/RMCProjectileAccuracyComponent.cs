@@ -58,7 +58,7 @@ public sealed partial class RMCProjectileAccuracyComponent : Component
     /// Time in seconds the jitter effect plays for a bullet missing an entity.
     /// </summary>
     [DataField, AutoNetworkedField]
-    public TimeSpan MissJitterDuration = TimeSpan.FromSeconds(0.2);
+    public TimeSpan MissJitterDuration = TimeSpan.FromSeconds(0.5);
 
     /// <summary>
     /// These are the coordinates from which the projectile was shot. Used to determine the distance travelled.
