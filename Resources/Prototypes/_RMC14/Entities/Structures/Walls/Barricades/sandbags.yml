@@ -57,6 +57,14 @@
         Slash: 10
 
 - type: entity
+  parent: CMBarricadeSandbag
+  id: RMCBarricadeSandbagBarbed
+  suffix: Barbed
+  components:
+  - type: Barbed
+    isBarbed: true
+
+- type: entity
   parent: BaseItem
   id: CMSandbagEmpty
   name: empty sandbags

@@ -13,8 +13,15 @@ public sealed class BarbedSystem : SharedBarbedSystem
     {
         base.Initialize();
 
+        SubscribeLocalEvent<BarbedComponent, MapInitEvent>(OnBarbedMapinit);
         SubscribeLocalEvent<BarbedComponent, ConstructionChangeEntityEvent>(OnBarbedEntityConstructionChange);
         SubscribeLocalEvent<BarbedComponent, BarbedStateChangedEvent>(OnBarbedStateChanged);
+    }
+
+    private void OnBarbedMapinit(Entity<BarbedComponent> ent, ref MapInitEvent args)
+    {
+        UpdateBarricade(ent);
+        UpdateDamageTrigger(ent, false);
     }
 
     private void OnBarbedEntityConstructionChange(EntityUid ent, BarbedComponent comp, ConstructionChangeEntityEvent args)
@@ -24,18 +31,23 @@ public sealed class BarbedSystem : SharedBarbedSystem
         UpdateBarricade((args.New, newComp), true);
     }
 
-    private void OnBarbedStateChanged(Entity<BarbedComponent>ent, ref BarbedStateChangedEvent args)
+    private void OnBarbedStateChanged(Entity<BarbedComponent> ent, ref BarbedStateChangedEvent args)
     {
-        if(!TryComp(ent, out DestructibleComponent? destructible))
+        UpdateDamageTrigger(ent);
+    }
+
+    private void UpdateDamageTrigger(Entity<BarbedComponent> ent, bool decreaseHealth = true)
+    {
+        if (!TryComp(ent, out DestructibleComponent? destructible))
             return;
 
         var trigger = (DamageTrigger?) destructible.Thresholds.LastOrDefault(threshold => threshold.Trigger is DamageTrigger)?.Trigger;
-        if(trigger == null)
+        if (trigger == null)
             return;
 
-        if(ent.Comp.IsBarbed)
+        if (ent.Comp.IsBarbed)
             trigger.Damage += ent.Comp.MaxHealthIncrease;
-        else
+        else if (decreaseHealth)
             trigger.Damage -= ent.Comp.MaxHealthIncrease;
     }
 }

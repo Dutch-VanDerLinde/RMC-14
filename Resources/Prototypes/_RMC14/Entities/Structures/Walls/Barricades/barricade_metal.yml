@@ -68,6 +68,14 @@
     tags:
     - RMCMetalBarricade
 
+- type: entity
+  parent: CMBarricadeMetal
+  id: RMCBarricadeMetalBarbed
+  suffix: Barbed
+  components:
+  - type: Barbed
+    isBarbed: true
+
 - type: Tag
   id: RMCMetalBarricade
 
@@ -108,6 +116,14 @@
           Heat: 2.8125
 
 - type: entity
+  parent: CMBarricadeBurn
+  id: RMCBarricadeBurnBarbed
+  suffix: Biohazard, Barbed
+  components:
+  - type: Barbed
+    isBarbed: true
+
+- type: entity
   parent: CMBarricadeMetal
   id: CMBarricadeBrute
   suffix: Reinforced
@@ -129,6 +145,14 @@
         sprite: _RMC14/Structures/Walls/Barricades/brute_barricade_cracks.rsi
     - type: RMCConstructionUpgradeTarget
       upgrades: null
+
+- type: entity
+  parent: CMBarricadeBrute
+  id: RMCBarricadeBruteBarbed
+  suffix: Reinforced, Barbed
+  components:
+  - type: Barbed
+    isBarbed: true
 
 - type: entity
   parent: CMBarricadeMetal
@@ -155,6 +179,14 @@
       damage:
         types:
           Heat: 1.875
+
+- type: entity
+  parent: CMBarricadeExplosive
+  id: RMCBarricadeExplosiveBarbed
+  suffix: Composite, Barbed
+  components:
+  - type: Barbed
+    isBarbed: true
 
 # Turnstile (not sure how to make a one-way door so for now it is a glorified fence)
 - type: entity
@@ -491,3 +523,11 @@
     delay: 0.3
   - type: Climbable
   - type: RMCOpenOnlyWhenUnanchored
+
+- type: entity
+  parent: CMBarricadeMetalDoor
+  id: RMCBarricadeMetalDoorBarbed
+  suffix: Barbed
+  components:
+  - type: Barbed
+    isBarbed: true
